@@ -1,5 +1,8 @@
 import NextAuth from "next-auth"
 import GoogleProvider from 'next-auth/providers/google'
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import clientPromise from "../../../lib/mongodb"
+import dbConnect from '../../../lib/dbConnect'
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -10,5 +13,7 @@ export const authOptions = {
     }),
     // ...add more providers here
   ],
+  debug: process.env.NODE_ENV === 'development',
+  adapter: MongoDBAdapter(clientPromise),
 }
 export default NextAuth(authOptions)
