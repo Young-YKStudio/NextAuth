@@ -27,7 +27,8 @@ const userSchema = new Schema(
     emailVerified: {
       type: Boolean,
       default: false,
-    }
+    },
+    id: String,
   },{timestamps: true}
 )
 
