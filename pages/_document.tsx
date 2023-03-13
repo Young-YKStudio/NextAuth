@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body className='font-Inter tracking-wider'>
+      <body className='font-Inter'>
         <Main />
         <NextScript />
       </body>

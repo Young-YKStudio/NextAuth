@@ -29,14 +29,14 @@ const Header = () => {
     } else if (pathname === '/login') {
       return null
     } else {
-      return <HorizontalHeader navigations={navigations} session={session} />
+      return <HorizontalHeader navigations={navigations} session={session} path={pathname} />
     }
   }
 
   return (
-    <>
+    <div className='tracking-wider'>
       {verticalHeaderSetter()}
-    </>
+    </div>
   );
 }
 export default Header;
