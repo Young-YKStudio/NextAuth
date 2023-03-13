@@ -6,6 +6,7 @@ import clientPromise from "../../../lib/mongodb"
 import dbConnect from '../../../lib/dbConnect'
 import User from '../../../model/User'
 import { compare } from 'bcrypt'
+import { redirect } from "next/dist/server/api-utils"
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -72,8 +73,13 @@ export default NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    redirect: async () => {
-      return Promise.resolve('/')
+    async redirect({url, baseUrl}) {
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`
+      } else if (new URL(url).origin === baseUrl) {
+        return url
+      }
+      return baseUrl
     }
   }
 })

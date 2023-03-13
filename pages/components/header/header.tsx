@@ -1,18 +1,42 @@
-import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import HorizontalHeader from './horizontalHeader';
+import VerticalHeader from './verticalHeader';
+import { MdHome, MdSpaceDashboard } from "react-icons/md";
+
+const navigations = [
+  {
+    name: 'Home',
+    href: '/',
+    icon: <MdHome className='mr-2 w-5 h-5'/>
+  },
+  {
+    name: 'Dashboard',
+    href: '/dashboard',
+    icon: <MdSpaceDashboard className='mr-2 w-5 h-5'/>
+  },
+]
 
 const Header = () => {
   const { data: session } = useSession();
   const { pathname } = useRouter();
 
+  console.log(pathname, session, 'from header')
+
+  const verticalHeaderSetter = () => {
+    if (pathname.includes('/dashboard')) {
+      return <VerticalHeader navigations={navigations} session={session} path={pathname} />
+    } else if (pathname === '/login') {
+      return null
+    } else {
+      return <HorizontalHeader navigations={navigations} session={session} />
+    }
+  }
+
   return (
-    <nav className='fixed top-0 flex justify-center bg-indigo-200'>
-      <ul className='flex gap-4'>
-        <li><NextLink href='/'>Home</NextLink></li>
-        { session ? <button onClick={() => signOut()}>LogOut</button> : <li><NextLink href='/login'>Login</NextLink></li>}
-      </ul>
-    </nav>
+    <>
+      {verticalHeaderSetter()}
+    </>
   );
 }
 export default Header;

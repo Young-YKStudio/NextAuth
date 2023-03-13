@@ -1,7 +1,6 @@
-import { signIn, signOut, getProviders, useSession } from 'next-auth/react';
+import { signIn, getProviders, useSession } from 'next-auth/react';
 import { Container } from './components';
-import { useState, useEffect, Dispatch, SetStateAction, FunctionComponent, ChangeEvent } from 'react'
-import axios from 'axios'
+import { useState, Dispatch, SetStateAction, FunctionComponent, ChangeEvent } from 'react'
 import Router from 'next/router'
 import { FcGoogle } from "react-icons/fc";
 
@@ -13,7 +12,6 @@ interface LoginProps {
 const Login: FunctionComponent<LoginProps> = ({currentSection, setCurrentSection, providers}) => {
 
   const [ loginForm, setLoginForm ] = useState({
-    name: '',
     email: '',
     password: ''
   })
@@ -52,7 +50,7 @@ const Login: FunctionComponent<LoginProps> = ({currentSection, setCurrentSection
             className='w-full border-2 border-transparent flex items-center justify-center bg-white py-2 rounded-lg hover:border-indigo-500'
             onClick={() => {
               signIn(provider.id, {
-                callbackUrl: `${window.location.origin}`
+                callbackUrl: '/login'
               })
             }}
           >
@@ -63,7 +61,12 @@ const Login: FunctionComponent<LoginProps> = ({currentSection, setCurrentSection
     </div>
   )
 
-  const { name, email, password } = loginForm
+  const { email, password } = loginForm
+  const { data: session, status } = useSession()
+
+  if (status === 'authenticated') {
+    redirectToHome()
+  }
 
   return (
     <Container>
@@ -107,10 +110,6 @@ const Login: FunctionComponent<LoginProps> = ({currentSection, setCurrentSection
 export default Login;
 
 export async function getServerSideProps() {
-
-  const { data: session } = useSession()
-
-  console.log(session, 'from getserversideprop')
 
   return {
     props: {
